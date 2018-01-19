@@ -63,7 +63,7 @@ Step9: Change the java home directory Something like environmental variable
 -	Export JAVA_HOME=/root/jdk1.8.xx 
 -	Echo $JAVA_HOME ->  we get latest path, but it works only once, its not permanent. We need to make global, for all terminals
 -	So copy the path and open file in etc/bashrc vim /etc/bashrc
-?	Add that path at the end of the file
+?	Add that path at the end of the file JAVA_HOME=/root/jdk1.8.xxxxx
 ?	:wq!
 •	If I don’t want to set for all user and I wany to make it only for me then add that path to basrc file which is present in-home directory
 •	Cd /root
@@ -102,3 +102,116 @@ root     24430 24412  0 10:10 pts/1    00:00:00 grep --color=auto Jenkins
 You will see jobs, nodes, users,plugins,secrets,logs etc
 Note: We can see that Jenkins will store all of its files in /root/.jenkins. If you use yum install Jenkins.war, then it will store in /var/lib/Jenkins
 
+HOW TO TAKE BACKUP OF JENKINS JOB
+LOCALHOST:8080/job/CloneJob/config.xml
+
+ANT
+When ever you have build.xml file in github repo
+-	Clone the repo(https://github.com/AbhiReddyMiru/JavaApplication.git) into Jenkins first build job first. You will see build.xml in workspace but NOT build folder
+-	Now. In manage Jenkins
+?	Global Tool Config
+?	Under ANT 
+o	Ant installations – name = Local_Ant (Some_Name)
+o	Checkbox install automatically
+o	Save
+Goto Jobs
+-	In Your job 
+?	Under build 
+?	Invoke ant
+o	Ant version – Local_Ant (Which you have given during ANT INSTALLATION)
+o	Targets – leave like that. 
+o	Save 
+-	Build job now
+You can see
+Unpacking https://archive.apache.org/dist/ant/binaries/apache-ant-1.10.1-bin.zip to /root/.jenkins/tools/hudson.tasks.Ant_AntInstallation/Local_Ant on Jenkins
+
+-	AND ALSO U SEE
+[jar] Building jar: /root/.jenkins/workspace/Build_job/build/jar/Project.jar
+
+In workspace you see BUILD.XML file has been unpacked and you can see some folder BUILD FOLDER  Inside that you will project.jar file
+
+ 
+
+
+OUR TARGET IS TO ACHIEVE CONTINIOUS INTEGRATION 
+-	In your build job go to configure 
+?	In Build Trigger -> check the Github Hook Trigger for GIYScm polling
+?	Save
+
+-	Go to GitHUB repo 
+?	Under repo settings
+?	Integrations and service 
+?	Add service 
+?	Jenkins (github plugin)
+?	Under Jenkins hook url -> Copy and pass localhost:8080/github-webhook/
+?	Save
+-	Go to Jenkins website and check the build number so that if you make any changes automatically it should build new job So obviously build number increases
+
+NOW WE ARE STORING OUR ARTIFACTS ON S3 INSTEAD OF JFROG / NEXUS
+-	Install new plugin in search type s3. Install s3
+-	So in BUILD we have configure ANT (Convert .xml file to folder jar )
+-	So in POST BUILD ACTION, we can see publish artifacts to s3 buckets
+-	Create a bucket in S3(Not Public) and we need to push our artifacts to that s3 bucket 
+-	Goto Jenkins ->Manage Jenkins -> Configuration System -> You can find AMAZON S3 PROFILES
+?	Profile name = pushtoS3
+?	Access key = aws access keys and secret key
+-	Go toBuildJOb ->  Configure -> Add Post build actions -> select s3Profile
+?	Source = build/jar/*.jar
+?	Destination bucket = Bucket name
+?	Bucket region = select region
+?	Save 
+-	Run the job
+-	It will save in s3 bucket
+
+DEPLOY THIS JAR FILE IN SERVERS
+-	We have done till continuous Integration. We are going to work on Continuous deploy
+-	We have jar file in S3. We need o download it automatically. Other cannot access our S3 bucket since it is private. So, we will create a ROLE and attach it to EC2 instances
+-	IAM ROLE
+-	Create Role
+?	EC2 role
+?	S3fullAccess
+?	Role name – something like artifact download 
+?	Create role
+-	Launch EC2 Instance using newly created role attach to it. 
+-	Open Putty With that newly created IP address
+-	Google aws s3 Cli commands
+-	In putty
+?	Mkdir jars
+?	Cd jars
+?	pwd
+?	Aws s3 cp s3://javara(bucket_name)/Project.jar(jar_File_name) Project.jar
+If you run that command You can see .jar file in s3 bucket will be downloaded in your ec2
+
+DEPLOY JOB FOR AUTOMATIC DEPLOY ALL THE TIME
+-	MAIN PURPOSE OF THIS JOB IS TO DOWNLOAD THE JAR FILE FROM THE ARTIFACTORY(S3 in our case) SERVER
+-	Create a new job DEPLOY_TO_QAJOB
+-	Manage plugin -> Publish over SSH ->  install
+-	In Jenkins -> Configurations -> publish over ssh -> 
+Key -> copy and past .pem file key 
+Add SSH server -> Name  = QAServer 
+		Hostname = publicIP of QAserver instance 
+		Username – ec2-user 
+		Test Configuraion = gives respose as success
+-	Open QAserver job
+-	In configure 
+?	Under BUILD  
+?	Select send files or execute commands over SSH
+?	Name = QAServer
+?	Exec Command for auto download -> aws s3 cp s3://javara/Project.jar Project.jar
+?	Save
+?	Build job
+?	You can see Project.jar file is downloaded in ec2 putty
+
+INTEGRATION AND DEPLOY SHOULD HAPPEN ONE AFTER THE OTHER
+DeployQAJob has to occur automatically once 
+-	So go to QAServerJOB under Build Trigger
+-	Select Build After other projects are built option
+?	Projetcs to watch = BuildJob
+?	Select Trigger if build is stable
+-	Save
+CHECK THE WHOLE PROCESS CI-CD
+-	Remove Project.jar file in ec2 instance of QASERVER
+-	Make changes in GitHUb
+-	Save changes
+-	Go to Jenkins website look at BUILDQUEUE, You can see BuildJob is build first later followed by QAServer
+-	Check in Ec2Instances Project.jar file is downloaded.
