@@ -102,8 +102,29 @@ root     24430 24412  0 10:10 pts/1    00:00:00 grep --color=auto Jenkins
 You will see jobs, nodes, users,plugins,secrets,logs etc
 Note: We can see that Jenkins will store all of its files in /root/.jenkins. If you use yum install Jenkins.war, then it will store in /var/lib/Jenkins
 
+Manage Jenkins:
+Configure System:
+-	No of Executors : No of jobs running at a time. Remain build queue. No of concurrent build
+-	Usage = Use this node
+-	Retry count = 1
+Credentials
+-	Jenkins
+-	Global Credentials
+-	Add credentials
+?	Username 
+?	Password
+?	ID
+?	Description
+?	OK
+CREATE NEW CLONEJOB
+-	Under git I have given github link 
+-	 Build script
+-	You can see material in your github will be cloned in your job workspace
+=============================================================================
 HOW TO TAKE BACKUP OF JENKINS JOB
 LOCALHOST:8080/job/CloneJob/config.xml
+=============================================================================
+
 
 ANT
 When ever you have build.xml file in github repo

@@ -8,5 +8,3 @@
 5. First BuildJob in jenkins
 6. Using ANT for .XML file. Converting that .xml file to folder (Simple language)
 7. Achieving CONTINIOUS INTEGRATION
-8. Achieving CONTINOUS DEPLOY
-9. RUNNING WHOLE PROCESS CONTINOUSLY IN A SINGLE STEP
