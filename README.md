@@ -8,3 +8,6 @@
 5. First BuildJob in jenkins
 6. Using ANT for .XML file. Converting that .xml file to folder (Simple language)
 7. Achieving CONTINIOUS INTEGRATION
+8. Storing artifacts in to S3 bucket
+9. Sending artifacts from S3 bucket to QA_Server
+10. Achieving complete CI-CD process
