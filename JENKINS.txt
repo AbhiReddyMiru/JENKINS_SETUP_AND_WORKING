@@ -1,8 +1,8 @@
-JENKINS
+# JENKINS
 INSTALLATION OF LATEST VERSION OF JAVA ON PUTTY
 Step1:	we need a server. So, I am talking EC2 instance.
 -	Tag Name = JenkinsServer
--	Allowing all traffic for now… (but recommended tight security)
+-	Allowing all traffic for nowâ€¦ (but recommended tight security)
 -	Launch
 Step2: Login in to putty using public ID
 -	Ec2-user@x.y.z.a
@@ -65,11 +65,11 @@ Step9: Change the java home directory Something like environmental variable
 -	So copy the path and open file in etc/bashrc vim /etc/bashrc
 ?	Add that path at the end of the file JAVA_HOME=/root/jdk1.8.xxxxx
 ?	:wq!
-•	If I don’t want to set for all user and I wany to make it only for me then add that path to basrc file which is present in-home directory
-•	Cd /root
-•	Ls -al -> I can see .bashrc
-•	Vim .bashrc
-•	Add end of the line
+â€¢	If I donâ€™t want to set for all user and I wany to make it only for me then add that path to basrc file which is present in-home directory
+â€¢	Cd /root
+â€¢	Ls -al -> I can see .bashrc
+â€¢	Vim .bashrc
+â€¢	Add end of the line
 Similarly to ec2user
 Cd /home/ec2-user/
 Ls -al
@@ -132,15 +132,15 @@ When ever you have build.xml file in github repo
 -	Now. In manage Jenkins
 ?	Global Tool Config
 ?	Under ANT 
-o	Ant installations – name = Local_Ant (Some_Name)
+o	Ant installations â€“ name = Local_Ant (Some_Name)
 o	Checkbox install automatically
 o	Save
 Goto Jobs
 -	In Your job 
 ?	Under build 
 ?	Invoke ant
-o	Ant version – Local_Ant (Which you have given during ANT INSTALLATION)
-o	Targets – leave like that. 
+o	Ant version â€“ Local_Ant (Which you have given during ANT INSTALLATION)
+o	Targets â€“ leave like that. 
 o	Save 
 -	Build job now
 You can see
@@ -191,7 +191,7 @@ DEPLOY THIS JAR FILE IN SERVERS
 -	Create Role
 ?	EC2 role
 ?	S3fullAccess
-?	Role name – something like artifact download 
+?	Role name â€“ something like artifact download 
 ?	Create role
 -	Launch EC2 Instance using newly created role attach to it. 
 -	Open Putty With that newly created IP address
@@ -211,7 +211,7 @@ DEPLOY JOB FOR AUTOMATIC DEPLOY ALL THE TIME
 Key -> copy and past .pem file key 
 Add SSH server -> Name  = QAServer 
 		Hostname = publicIP of QAserver instance 
-		Username – ec2-user 
+		Username â€“ ec2-user 
 		Test Configuraion = gives respose as success
 -	Open QAserver job
 -	In configure 
