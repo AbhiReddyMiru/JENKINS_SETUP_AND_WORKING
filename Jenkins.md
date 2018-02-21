@@ -6,15 +6,18 @@ Step1:	we need a server. So, I am talking EC2 instance.
 -	Tag Name = JenkinsServer
 -	Allowing all traffic for now… (but recommended tight security)
 -	Launch
+
 Step2: Login in to putty using public ID
 -	Ec2-user@x.y.z.a
 -	Auth-key_link
 -	Launch the Comand Line Interface
+
 Step3: Check weather java in installed or not in that opened CLI by typing
 -	Sudo -i
 -	Java
 Note: Two ways in install JENKINS. 1. By Dockers and 2. WAR files. Here we are following WAR files
 WAR FILE INSTALLATIONS 
+
 Step 4: Copy link Address http://mirrors.jenkins.io/war-stable/latest/jenkins.war
 -	Download your warfile in terminal: 
 wget http://mirrors.jenkins.io/war-stable/latest/jenkins.war
@@ -23,6 +26,7 @@ wget http://mirrors.jenkins.io/war-stable/latest/jenkins.war
 -	Check the version of java: java -version
 -	I am installing java 1.8
 -	Download java 1.8  jdk-8u151-linux-x64.tar.gz
+
 Step5: Download WinSCP
 -	Open WinSCP (Secure CoPy)
 -	Hostname: IP
@@ -30,6 +34,7 @@ Step5: Download WinSCP
 -	Click on Advance -> ssh -> Authentication -> browse your .ppk key
 -	Once connected 
 Select the download JAVA file. Drag and drop in another window
+
 Step7: Once the transfer in done. In your terminal
 -	Copy the jdk.gz file from ec2-user to root by sudo cp /pwd/jdk.gz /root
 -	You can see file is copied in root 
@@ -37,6 +42,7 @@ Step7: Once the transfer in done. In your terminal
 -	ls-> u can see your 1.8 version 
 -	Extract .gz file by tar -xvzf jdk-xxxxxxxx.tar.gz
 -	Ls -> u can see .gz is been extracted
+
 Step8: Once you extract, in the terminal
 -	Which java
 -	cd /usr/bin
@@ -56,6 +62,7 @@ Step8: Once you extract, in the terminal
 -	ls -al | grep java
 ?	You can see now it is pointing to java1.8.1
 -	Check java -version
+
 Step9: Change the java home directory Something like environmental variable
 -	Echo $JAVA_HOME -> you get /user/lib/jvm/jre (old version java1.7.xxx path)
 -	But wee should get latest java1.8.xx
@@ -77,6 +84,7 @@ Cd /home/ec2-user/
 Ls -al
 Vim .bashrc file
 -	Run source bashrc to trigger the changes
+
 Step10: INSTALL JENKINS
 -	Run java -jar Jenkins.war
 -	In new window -> copy and paste IPaddress:8080 -> enter
@@ -85,6 +93,7 @@ Step10: INSTALL JENKINS
 -	Install recommended plugins
 -	Create new user and password etc
 -	Start using Jenkins
+
 Step11: logout and login to check weather working properly 
 -	If you stop backside running terminal by ctrl+c automatically here Jenkins stops working
 -	Restart again by Java -jar Jenkins.war & -> enter -> its starts running properly
@@ -101,14 +110,17 @@ root     24430 24412  0 10:10 pts/1    00:00:00 grep --color=auto Jenkins
 ?	.jenkins
 -	Cd .jenkins
 -	Ls
+
 You will see jobs, nodes, users,plugins,secrets,logs etc
 Note: We can see that Jenkins will store all of its files in /root/.jenkins. If you use yum install Jenkins.war, then it will store in /var/lib/Jenkins
 
 Manage Jenkins:
+
 Configure System:
 -	No of Executors : No of jobs running at a time. Remain build queue. No of concurrent build
 -	Usage = Use this node
 -	Retry count = 1
+
 Credentials
 -	Jenkins
 -	Global Credentials
@@ -118,10 +130,12 @@ Credentials
 ?	ID
 ?	Description
 ?	OK
+
 CREATE NEW CLONEJOB
 -	Under git I have given github link 
 -	 Build script
 -	You can see material in your github will be cloned in your job workspace
+
 =============================================================================
 HOW TO TAKE BACKUP OF JENKINS JOB
 LOCALHOST:8080/job/CloneJob/config.xml
@@ -137,6 +151,7 @@ When ever you have build.xml file in github repo
 o	Ant installations – name = Local_Ant (Some_Name)
 o	Checkbox install automatically
 o	Save
+
 Goto Jobs
 -	In Your job 
 ?	Under build 
@@ -145,7 +160,9 @@ o	Ant version – Local_Ant (Which you have given during ANT INSTALLATION)
 o	Targets – leave like that. 
 o	Save 
 -	Build job now
+
 You can see
+
 Unpacking https://archive.apache.org/dist/ant/binaries/apache-ant-1.10.1-bin.zip to /root/.jenkins/tools/hudson.tasks.Ant_AntInstallation/Local_Ant on Jenkins
 
 -	AND ALSO U SEE
@@ -153,10 +170,7 @@ Unpacking https://archive.apache.org/dist/ant/binaries/apache-ant-1.10.1-bin.zip
 
 In workspace you see BUILD.XML file has been unpacked and you can see some folder BUILD FOLDER  Inside that you will project.jar file
 
- 
-
-
-OUR TARGET IS TO ACHIEVE CONTINIOUS INTEGRATION 
+ OUR TARGET IS TO ACHIEVE CONTINIOUS INTEGRATION 
 -	In your build job go to configure 
 ?	In Build Trigger -> check the Github Hook Trigger for GIYScm polling
 ?	Save
@@ -188,7 +202,8 @@ NOW WE ARE STORING OUR ARTIFACTS ON S3 INSTEAD OF JFROG / NEXUS
 
 DEPLOY THIS JAR FILE IN SERVERS
 -	We have done till continuous Integration. We are going to work on Continuous deploy
--	We have jar file in S3. We need o download it automatically. Other cannot access our S3 bucket since it is private. So, we will create a ROLE and attach it to EC2 instances
+-	We have jar file in S3. We need o download it automatically. Other cannot access our S3 bucket since it is private. So, we will 
+	create a ROLE and attach it to EC2 instances
 -	IAM ROLE
 -	Create Role
 ?	EC2 role
@@ -203,7 +218,8 @@ DEPLOY THIS JAR FILE IN SERVERS
 ?	Cd jars
 ?	pwd
 ?	Aws s3 cp s3://javara(bucket_name)/Project.jar(jar_File_name) Project.jar
-If you run that command You can see .jar file in s3 bucket will be downloaded in your ec2
+
+	If you run that command You can see .jar file in s3 bucket will be downloaded in your ec2
 
 DEPLOY JOB FOR AUTOMATIC DEPLOY ALL THE TIME
 -	MAIN PURPOSE OF THIS JOB IS TO DOWNLOAD THE JAR FILE FROM THE ARTIFACTORY(S3 in our case) SERVER
@@ -226,12 +242,14 @@ Add SSH server -> Name  = QAServer
 ?	You can see Project.jar file is downloaded in ec2 putty
 
 INTEGRATION AND DEPLOY SHOULD HAPPEN ONE AFTER THE OTHER
+
 DeployQAJob has to occur automatically once 
 -	So go to QAServerJOB under Build Trigger
 -	Select Build After other projects are built option
 ?	Projetcs to watch = BuildJob
 ?	Select Trigger if build is stable
 -	Save
+
 CHECK THE WHOLE PROCESS CI-CD
 -	Remove Project.jar file in ec2 instance of QASERVER
 -	Make changes in GitHUb
