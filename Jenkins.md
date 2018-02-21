@@ -1,5 +1,7 @@
 #JENKINS
+
 INSTALLATION OF LATEST VERSION OF JAVA ON PUTTY
+
 Step1:	we need a server. So, I am talking EC2 instance.
 -	Tag Name = JenkinsServer
 -	Allowing all traffic for now… (but recommended tight security)
