@@ -1,4 +1,4 @@
-﻿# JENKINS
+# JENKINS
 
 ## INSTALLATION OF LATEST VERSION OF JAVA ON PUTTY
 ### Step1:	we need a server. So, I am talking EC2 instance.
@@ -91,7 +91,7 @@ Select the download JAVA file. Drag and drop in another window
 ## NOTE: I have duplicated the session and closed the present running session or terminal
 Logged in as a root and checked weather Jenkins is running or not by the command
 -	Ps -ef | grep Jenkins 
-* * 	root     24322     1 20 10:08 ?        00:00:25 java -jar jenkins.war
+* 		root     24322     1 20 10:08 ?        00:00:25 java -jar jenkins.war
     	root     24430 24412  0 10:10 pts/1    00:00:00 grep --color=auto Jenkins
 
 * cd /root
@@ -122,7 +122,7 @@ CREATE NEW CLONEJOB
 -	You can see material in your github will be cloned in your job workspace
 
 ## HOW TO TAKE BACKUP OF JENKINS JOB
-* * 	LOCALHOST:8080/job/CloneJob/config.xml
+* 		LOCALHOST:8080/job/CloneJob/config.xml
 
 
 ## ANT = When ever you have build.xml file in github repo
